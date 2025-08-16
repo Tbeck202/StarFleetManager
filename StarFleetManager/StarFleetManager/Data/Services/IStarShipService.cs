@@ -5,6 +5,6 @@ namespace StarFleetManager.Data.Services
 {
     public interface IStarShipService
     {
-        Task<List<StarShipView>> GetAllAsync();
+        Task<List<StarShip>> GetAllAsync();
     }
 }
