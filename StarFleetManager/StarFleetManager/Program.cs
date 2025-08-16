@@ -5,6 +5,7 @@ using StarFleetManager.Client.Pages;
 using StarFleetManager.Components;
 using StarFleetManager.Components.Account;
 using StarFleetManager.Data;
+using StarFleetManager.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,8 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
+builder.Services.AddScoped<ISwapi, Swapi>();
+builder.Services.AddScoped<ISwapiGetRequest, StarshipRequest>();
 
 builder.Services.AddAuthentication(options =>
     {

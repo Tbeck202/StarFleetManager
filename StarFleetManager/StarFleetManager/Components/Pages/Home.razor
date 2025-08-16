@@ -1,7 +1,33 @@
 ﻿@page "/"
+@rendermode InteractiveServer
+@inject ISwapiGetRequest StarShipRequest
 
 <PageTitle>Home</PageTitle>
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
+@if(_starShips.Count > 0)
+{
+    <ul>
+        @foreach(var ship in _starShips)
+        {
+            <li>@ship.Name - @ship.Model</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code{
+    private List<StarShip> _starShips = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(_starShips.Count == 0 || _starShips is null)
+        {
+            _starShips = await StarShipRequest.GetAllAsync();
+        }
+    }
+}
