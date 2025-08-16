@@ -19,7 +19,8 @@ builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 builder.Services.AddScoped<ISwapi, Swapi>();
-builder.Services.AddScoped<ISwapiGetRequest, StarshipRequest>();
+builder.Services.AddScoped<ISwapiGetRequest, SwapiGetRequest>();
+builder.Services.AddScoped<IStarShipService, StarShipService>();    
 
 builder.Services.AddAuthentication(options =>
     {

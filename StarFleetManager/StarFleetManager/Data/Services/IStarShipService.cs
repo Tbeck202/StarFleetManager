@@ -1,0 +1,10 @@
+﻿using StarFleetManager.Library.Models;
+using StarFleetManager.Library.ViewModels;
+
+namespace StarFleetManager.Data.Services
+{
+    public interface IStarShipService
+    {
+        Task<List<StarShipView>> GetAllAsync();
+    }
+}

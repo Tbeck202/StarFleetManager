@@ -1,6 +1,6 @@
 ﻿@page "/"
 @rendermode InteractiveServer
-@inject ISwapiGetRequest StarShipRequest
+@inject IStarShipService StarShipService
 
 <PageTitle>Home</PageTitle>
 
@@ -27,7 +27,7 @@ else
     {
         if(_starShips.Count == 0 || _starShips is null)
         {
-            _starShips = await StarShipRequest.GetAllAsync();
+            _starShips = await StarShipService.GetAllAsync();
         }
     }
 }
