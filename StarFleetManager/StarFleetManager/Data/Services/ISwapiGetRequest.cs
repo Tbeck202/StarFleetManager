@@ -1,9 +1,10 @@
 ﻿using StarFleetManager.Library.Models;
+using StarFleetManager.Library.ViewModels;
 
 namespace StarFleetManager.Data.Services
 {
     public interface ISwapiGetRequest
     {
-        Task<List<StarShip>> GetAllAsync();
+        Task<List<StarShipView>> GetAllAsync();
     }
 }

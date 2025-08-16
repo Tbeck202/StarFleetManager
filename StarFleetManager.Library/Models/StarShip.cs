@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace StarFleetManager.Library.Models
 {
-    public class StarShip
+    public class StarShip : IStarShip
     {
         [JsonProperty("name")]
         public string Name { get; set; }

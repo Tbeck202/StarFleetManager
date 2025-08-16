@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using StarFleetManager.Library.Models;
+using StarFleetManager.Library.ViewModels;
 
 namespace StarFleetManager.Data.Services
 {
@@ -11,7 +12,7 @@ namespace StarFleetManager.Data.Services
             Swapi = swapi;
         }
 
-        public async Task<List<StarShip>> GetAllAsync()
+        public async Task<List<StarShipView>> GetAllAsync()
         {
             List<StarShip> starShips = new List<StarShip>();
 
@@ -28,6 +29,7 @@ namespace StarFleetManager.Data.Services
             {
 
             }
+            // NEED TO INSTALL/IMPLEMENT DTO MAPPER (Mapster https://www.youtube.com/watch?v=xtpPspNdX58)
             return starShips;
         }
     }
