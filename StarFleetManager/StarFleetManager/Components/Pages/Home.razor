@@ -8,11 +8,12 @@
 
 @if (_creatingStarship)
 {
-    
+    <EditStarShip SaveShipCallback="@AddStarShip" />
 }
 
 @if(_starShips.Count > 0)
 {
+    <button class="btn btn-secondary" @onclick="CreateStarShip">Create a StarShip</button>
     <ul>
         @foreach(var ship in _starShips)
         {
@@ -24,7 +25,7 @@ else
 {
     <p>Your fleet is empty Admiral! What would you like to do?</p>
     <button class="btn btn-primary" @onclick="FillFleet">Seed Database</button>
-    <button class="btn btn-secondary">Create a StarShip</button>
+    <button class="btn btn-secondary" @onclick="CreateStarShip">Create a StarShip</button>
 }
 
 @code{
@@ -35,14 +36,14 @@ else
     {
         @if(_starShips is null || _starShips.Count == 0)
         {
-            _starShips = StarShipService.GetAll();
+            _starShips = await StarShipService.GetAllAsync();
         }
     }
 
     private async Task FillFleet()
     {
         bool dbSeeded = await StarShipService.SeedDataBaseAsync();
-        if(dbSeeded) _starShips = StarShipService.GetAll();
+        StateHasChanged();
     }
 
     private void CreateStarShip()
@@ -52,6 +53,8 @@ else
 
     public async Task AddStarShip(StarShipView ship)
     {
-        
+        bool shipSaved = await StarShipService.DbAddStarShipAsync(ship);
+        StateHasChanged();
+        _creatingStarship = !shipSaved;
     }
 }

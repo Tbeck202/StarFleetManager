@@ -1,0 +1,43 @@
+﻿
+<EditForm Model="@StarShip" OnValidSubmit="SaveStarShip" >
+    <InputText aria-label="name" @bind-Value="StarShip.Name" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.Model" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.Manufacturer" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.CostInCredits" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.Length" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.MaxAtmospheringSpeed" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.Crew" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.Passengers" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.CargoCapacity" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.Consumables" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.HyperdriveRating" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.MGLT" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.StarshipClass" class="form-control" />
+    @* <InputText aria-label="" @bind-Value="StarShip.Pilots" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.Films" class="form-control" /> *@
+    <InputDate aria-label="" @bind-Value="StarShip.Created" class="form-control" />
+    <InputDate aria-label="" @bind-Value="StarShip.Edited" class="form-control" />
+    <InputText aria-label="" @bind-Value="StarShip.Url" class="form-control" />
+    <button class="btn btn-success" type="submit">Save Starship</button>
+</EditForm>
+
+@code {
+    [Parameter]
+    public StarShipView? StarShip { get; set; }
+
+    [Parameter]
+    public EventCallback<StarShipView> SaveShipCallback { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(StarShip is null)
+        {
+            StarShip = new();
+        }
+    }
+
+    private async Task SaveStarShip()
+    {
+        await SaveShipCallback.InvokeAsync(StarShip);
+    }
+}

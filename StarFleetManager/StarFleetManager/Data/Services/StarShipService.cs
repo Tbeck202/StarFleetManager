@@ -24,8 +24,12 @@ namespace StarFleetManager.Data.Services
             _swapiGetRequest = swapiGetRequest;
         }
 
-        public List<StarShipView> GetAll()
+        public async Task<List<StarShipView>> GetAllAsync()
         {
+            if(StarShips.Count == 0)
+            {
+                StarShips = await DbGetAllAsync();
+            }
             return StarShips.Adapt<List<StarShipView>>();
         }
 
@@ -61,16 +65,41 @@ namespace StarFleetManager.Data.Services
             return new List<StarShip>();
         }
 
-        public async Task<List<StarShipView>> DbGetAllAsync()
+        private async Task<List<StarShip>> DbGetAllAsync()
         {
             List<StarShip> ships = new List<StarShip>();
 
-            using(var context = _contextFactory.CreateDbContext())
+            using (var context = _contextFactory.CreateDbContext())
             {
                 ships = await context.StarShips.ToListAsync();
             }
 
-            return ships.Adapt<List<StarShipView>>();
+            return ships.Adapt<List<StarShip>>();
+        }
+
+        //public async Task<List<StarShipView>> DbGetAllAsync()
+        //{
+        //    List<StarShip> ships = new List<StarShip>();
+
+        //    using(var context = _contextFactory.CreateDbContext())
+        //    {
+        //        ships = await context.StarShips.ToListAsync();
+        //    }
+
+        //    return ships.Adapt<List<StarShipView>>();
+        //}
+
+        public async Task<bool> DbAddStarShipAsync(StarShipView starShip)
+        {
+            int entitiesSaved = 0;
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                StarShip newStarShip = starShip.Adapt<StarShip>();
+                await context.StarShips.AddAsync(newStarShip);
+                entitiesSaved = await context.SaveChangesAsync();
+            }
+
+            return entitiesSaved > 0;
         }
     }
 }

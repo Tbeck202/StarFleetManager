@@ -5,12 +5,12 @@ namespace StarFleetManager.Data.Services
 {
     public interface IStarShipService
     {
-        List<StarShipView> GetAll();
+        Task<List<StarShipView>> GetAllAsync();
 
         Task<bool> SeedDataBaseAsync();
 
         Task<List<StarShip>> ApiGetAllAsync();
 
-        Task<List<StarShipView>> DbGetAllAsync();
+        Task<bool> DbAddStarShipAsync(StarShipView starShip);
     }
 }
