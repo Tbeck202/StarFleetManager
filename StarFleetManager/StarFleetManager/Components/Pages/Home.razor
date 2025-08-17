@@ -4,7 +4,12 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Starships</h1>
+
+@if (_creatingStarship)
+{
+    
+}
 
 @if(_starShips.Count > 0)
 {
@@ -17,17 +22,36 @@
 }
 else
 {
-    <p>Loading...</p>
+    <p>Your fleet is empty Admiral! What would you like to do?</p>
+    <button class="btn btn-primary" @onclick="FillFleet">Seed Database</button>
+    <button class="btn btn-secondary">Create a StarShip</button>
 }
 
 @code{
     private List<StarShipView> _starShips = new();
+    private bool _creatingStarship = false;
 
     protected override async Task OnInitializedAsync()
     {
-        if(_starShips.Count == 0 || _starShips is null)
+        @if(_starShips is null || _starShips.Count == 0)
         {
-            _starShips = await StarShipService.GetAllAsync();
+            _starShips = StarShipService.GetAll();
         }
+    }
+
+    private async Task FillFleet()
+    {
+        bool dbSeeded = await StarShipService.SeedDataBaseAsync();
+        if(dbSeeded) _starShips = StarShipService.GetAll();
+    }
+
+    private void CreateStarShip()
+    {
+        _creatingStarship = true;
+    }
+
+    public async Task AddStarShip(StarShipView ship)
+    {
+        
     }
 }
