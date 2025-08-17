@@ -4,8 +4,12 @@ using StarFleetManager.Library.Models;
 
 namespace StarFleetManager.Data
 {
-    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser>(options)
+    public class ApplicationDbContext : IdentityDbContext
     {
-        DbSet<StarShip> StarShips {  get; set; }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
+        {
+        }
+
+        public DbSet<StarShip> StarShips { get; set; }
     }
 }
