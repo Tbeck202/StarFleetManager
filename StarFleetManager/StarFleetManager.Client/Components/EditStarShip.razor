@@ -1,23 +1,93 @@
 ﻿
 <EditForm Model="@StarShip" OnValidSubmit="SaveStarShip" >
-    <InputText aria-label="name" @bind-Value="StarShip.Name" class="form-control" />
-    <InputText aria-label="" @bind-Value="StarShip.Model" class="form-control" />
-    <InputText aria-label="" @bind-Value="StarShip.Manufacturer" class="form-control" />
-    <InputText aria-label="" @bind-Value="StarShip.CostInCredits" class="form-control" />
-    <InputText aria-label="" @bind-Value="StarShip.Length" class="form-control" />
-    <InputText aria-label="" @bind-Value="StarShip.MaxAtmospheringSpeed" class="form-control" />
-    <InputText aria-label="" @bind-Value="StarShip.Crew" class="form-control" />
-    <InputText aria-label="" @bind-Value="StarShip.Passengers" class="form-control" />
-    <InputText aria-label="" @bind-Value="StarShip.CargoCapacity" class="form-control" />
-    <InputText aria-label="" @bind-Value="StarShip.Consumables" class="form-control" />
-    <InputText aria-label="" @bind-Value="StarShip.HyperdriveRating" class="form-control" />
-    <InputText aria-label="" @bind-Value="StarShip.MGLT" class="form-control" />
-    <InputText aria-label="" @bind-Value="StarShip.StarshipClass" class="form-control" />
-    @* <InputText aria-label="" @bind-Value="StarShip.Pilots" class="form-control" />
+    <p>Star Ship Info:</p>
+    <div class="form-floating mb-3">
+        <InputText aria-label="name" @bind-Value="StarShip.Name" class="form-control" />
+        <label for="name">Name</label>
+    </div>
+    <div class="form-floating mb-3">
+        <InputText aria-label="" @bind-Value="StarShip.Model" class="form-control" />
+        <label for="model">Model</label>
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="" @bind-Value="StarShip.Manufacturer" class="form-control" />
+        <label for="manufacturer">Manufacturer</label>
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="" @bind-Value="StarShip.CostInCredits" class="form-control" />
+        <label for="costInCredits">Cost (In Credits)</label>
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="" @bind-Value="StarShip.Length" class="form-control" />
+        <label for="length">Length</label>
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="" @bind-Value="StarShip.MaxAtmospheringSpeed" class="form-control" />
+        <label for="maxAtmospheringSpeed">Maximum Atmosphering Speed</label>
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="" @bind-Value="StarShip.Crew" class="form-control" />
+        <label for="crew">Crew</label>
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="" @bind-Value="StarShip.Passengers" class="form-control" />
+        <label for="passengers">Passengers</label>
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="" @bind-Value="StarShip.CargoCapacity" class="form-control" />
+        <label for="cargoCapacity">Cargo Capacity</label>
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="" @bind-Value="StarShip.Consumables" class="form-control" />
+        <label for="consumables">Consumables</label>
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="" @bind-Value="StarShip.HyperdriveRating" class="form-control" />
+        <label for="hyperdriveRating">Hyperdrive Rating</label>
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="" @bind-Value="StarShip.MGLT" class="form-control" />
+        <label for="mglt">MGLT</label>
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="" @bind-Value="StarShip.StarshipClass" class="form-control" />
+        <label for="starshipClass">Class</label>
+    </div>
+    
+    @* <div class="form-floating mb-3">
+        <label for=""></label>
+    </div>
+        <InputText aria-label="" @bind-Value="StarShip.Pilots" class="form-control" />
+        <div class="form-floating mb-3">
+        <label for=""></label>
+    </div>
     <InputText aria-label="" @bind-Value="StarShip.Films" class="form-control" /> *@
-    <InputDate aria-label="" @bind-Value="StarShip.Created" class="form-control" />
-    <InputDate aria-label="" @bind-Value="StarShip.Edited" class="form-control" />
-    <InputText aria-label="" @bind-Value="StarShip.Url" class="form-control" />
+    @* <div class="form-floating mb-3">
+        <InputDate aria-label="" @bind-Value="StarShip.Created" class="form-control" />
+        <label for=""></label>
+    </div> *@
+    
+    @* <div class="form-floating mb-3">
+        <InputDate aria-label="" @bind-Value="StarShip.Edited" class="form-control" />
+        <label for=""></label>
+    </div> *@
+    
+    @* <div class="form-floating mb-3">
+        <InputText aria-label="" @bind-Value="StarShip.Url" class="form-control" />
+        <label for="url">Url</label>
+    </div> *@
+    
     <button class="btn btn-success" type="submit">Save Starship</button>
 </EditForm>
 
@@ -38,6 +108,7 @@
 
     private async Task SaveStarShip()
     {
+        StarShip.Edited = DateTime.Now;
         await SaveShipCallback.InvokeAsync(StarShip);
     }
 }

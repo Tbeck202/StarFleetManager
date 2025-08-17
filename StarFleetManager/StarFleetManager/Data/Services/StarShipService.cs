@@ -95,8 +95,13 @@ namespace StarFleetManager.Data.Services
             using (var context = _contextFactory.CreateDbContext())
             {
                 StarShip newStarShip = starShip.Adapt<StarShip>();
-                await context.StarShips.AddAsync(newStarShip);
-                entitiesSaved = await context.SaveChangesAsync();
+                try
+                {
+                    await context.StarShips.AddAsync(newStarShip);
+                    entitiesSaved = await context.SaveChangesAsync();
+                }
+                catch (Exception ex) { }
+                
             }
 
             return entitiesSaved > 0;

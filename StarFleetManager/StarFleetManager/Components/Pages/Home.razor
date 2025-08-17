@@ -54,7 +54,7 @@ else
     public async Task AddStarShip(StarShipView ship)
     {
         bool shipSaved = await StarShipService.DbAddStarShipAsync(ship);
-        StateHasChanged();
         _creatingStarship = !shipSaved;
+        StateHasChanged();
     }
 }
