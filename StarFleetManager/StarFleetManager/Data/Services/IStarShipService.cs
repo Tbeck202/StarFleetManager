@@ -12,5 +12,7 @@ namespace StarFleetManager.Data.Services
         Task<List<StarShip>> ApiGetAllAsync();
 
         Task<bool> DbAddStarShipAsync(StarShipView starShip);
+
+        List<string> ApiGetFilmUrls();
     }
 }

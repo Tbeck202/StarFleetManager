@@ -7,5 +7,7 @@ namespace StarFleetManager.Data.Services
     public interface ISwapiGetRequest
     {
         Task<RestResponse> GetAllAsync(string endpoint);
+
+        List<string> GetFilmUrls();
     }
 }

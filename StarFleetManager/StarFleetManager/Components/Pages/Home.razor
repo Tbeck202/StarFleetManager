@@ -8,7 +8,7 @@
 
 @if (_creatingStarship)
 {
-    <EditStarShip SaveShipCallback="@AddStarShip" />
+    <EditStarShip SaveShipCallback="@AddStarShip"/>
 }
 
 @if(_starShips.Count > 0)
@@ -30,6 +30,7 @@ else
 
 @code{
     private List<StarShipView> _starShips = new();
+    private List<string> _filmUrls = new();
     private bool _creatingStarship = false;
 
     protected override async Task OnInitializedAsync()
@@ -37,6 +38,10 @@ else
         @if(_starShips is null || _starShips.Count == 0)
         {
             _starShips = await StarShipService.GetAllAsync();
+        }
+        @if(_filmUrls.Count == 0)
+        {
+            StarShipService.ApiGetFilmUrls();
         }
     }
 

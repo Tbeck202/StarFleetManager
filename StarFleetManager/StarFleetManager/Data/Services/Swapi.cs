@@ -15,6 +15,8 @@ namespace StarFleetManager.Data.Services
     {
         private readonly IConfiguration _configuration;
         private readonly string _baseUrl = string.Empty;
+        private readonly List<string> _filmUrls = new List<string>();
+        private readonly List<string> _peopleUrls = new List<string>();
 
         public Swapi(IConfiguration configuration)
         {
@@ -38,6 +40,11 @@ namespace StarFleetManager.Data.Services
             {
                 return new RestResponse();
             }
+        }
+
+        public List<string> GetFilmUrls()
+        {
+            return _filmUrls;
         }
     }
 }

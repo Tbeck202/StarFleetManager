@@ -106,5 +106,10 @@ namespace StarFleetManager.Data.Services
 
             return entitiesSaved > 0;
         }
+
+        public List<string> ApiGetFilmUrls()
+        {
+            return _swapiGetRequest.GetFilmUrls();
+        }
     }
 }
