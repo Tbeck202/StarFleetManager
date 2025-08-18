@@ -99,6 +99,7 @@ namespace StarFleetManager.Data.Services
                 {
                     await context.StarShips.AddAsync(newStarShip);
                     entitiesSaved = await context.SaveChangesAsync();
+                    if (entitiesSaved > 0) StarShips.Add(newStarShip);
                 }
                 catch (Exception ex) { }
                 

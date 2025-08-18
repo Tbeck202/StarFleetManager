@@ -81,12 +81,13 @@
     </div>
 
     <hr />
+
     <p>Enter the pilot & film urls separated by commas</p>
     
     <div class="form-floating mb-3">
         <InputTextArea aria-label="pilots" @bind-Value="_selectedPilots" class="form-control" />
         <label for="pilots">Pilots</label>
-        <ValidationMessage For="() => StarShip.Films" class="text-danger" />
+        <ValidationMessage For="() => StarShip.Pilots" class="text-danger" />
     </div>
 
     <div class="form-floating mb-3">
@@ -101,8 +102,9 @@
 
 
 @code {
+
     [Parameter]
-    public StarShipView? StarShip { get; set; }
+    public StarShipView StarShip { get; set; }
 
     // [Parameter]
     // public List<string>? FilmUrls { get; set; }
@@ -110,7 +112,7 @@
     [Parameter]
     public EventCallback<StarShipView> SaveShipCallback { get; set; }
 
-    private List<string> _filmUrls = new();
+    //private List<string> _filmUrls = new();
     private string _selectedFilms = string.Empty;
     private string _selectedPilots = string.Empty;
 
@@ -120,10 +122,10 @@
         {
             StarShip = new();
         }
-        if (_filmUrls.Count == 0)
-        {
-            _filmUrls = FilmUrls();
-        }
+        // if (_filmUrls.Count == 0)
+        // {
+        //     _filmUrls = FilmUrls();
+        // }
 
         //_selectedFilms = StarShip.Films ?? new List<string>();
     }
@@ -139,22 +141,25 @@
         StarShip.Pilots = ParseTextAreaEntry(_selectedPilots);
         StarShip.Created = StarShip.Created < DateTime.Now ? StarShip.Created : DateTime.Now;
         StarShip.Edited = DateTime.Now;
+        StarShip.Url = "https://swapi.info/api/starships";
         await SaveShipCallback.InvokeAsync(StarShip);
+        StarShip = new();
+        StateHasChanged();
     }
 
-    private List<string> FilmUrls()
-    {
-        return new List<string>
-        {
-            "https://swapi.info/api/films/1",
-            "https://swapi.info/api/films/2",
-            "https://swapi.info/api/films/3",
-            "https://swapi.info/api/films/4",
-            "https://swapi.info/api/films/5",
-            "https://swapi.info/api/films/6"
-        };
+    // private List<string> FilmUrls()
+    // {
+    //     return new List<string>
+    //     {
+    //         "https://swapi.info/api/films/1",
+    //         "https://swapi.info/api/films/2",
+    //         "https://swapi.info/api/films/3",
+    //         "https://swapi.info/api/films/4",
+    //         "https://swapi.info/api/films/5",
+    //         "https://swapi.info/api/films/6"
+    //     };
 
-    }
+    // }
 
     private List<string> ParseTextAreaEntry(string entry)
     {
