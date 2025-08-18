@@ -1,0 +1,139 @@
+﻿@using System.Reflection
+@using System.ComponentModel.DataAnnotations
+
+<div class="table-responsive">
+    <table class="table table-sm">
+        <thead>
+            <tr>
+                <th scope="col">
+                    <button class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#editModal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus" viewBox="0 0 16 16">
+                            <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4" />
+                        </svg>
+                    </button>
+                </th>
+                @foreach (var prop in typeof(StarShipView)
+                                .GetProperties()
+                                .OrderBy(prop => prop
+                                    .GetCustomAttribute<DisplayAttribute>()?.Order ?? int.MaxValue)
+                                    .Where(p => p
+                                        .GetCustomAttribute<DisplayAttribute>()?.Order <= 10))
+                {
+                    var display = prop.GetCustomAttribute<DisplayAttribute>();
+                    <th>@(display?.Name ?? prop.Name)</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var ship in StarShips)
+            {
+                <tr>
+                    
+                    @foreach (var prop in typeof(StarShipView)
+                        .GetProperties()
+                        .OrderBy(p => p
+                            .GetCustomAttribute<DisplayAttribute>()?.Order ?? int.MaxValue)
+                            .Where(p => p
+                                .GetCustomAttribute<DisplayAttribute>()?.Order <= 10))
+                    {
+                        var value = prop.GetValue(ship);
+                        if(value is IList<string> list)
+                        {
+                            <td>
+                                <select>
+                                    @foreach(var item in list)
+                                    {
+                                        <option>@item</option>
+                                    }
+                                </select>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>@value</td>
+                        }
+                    }
+                </tr>
+                <tr class="table-secondary">
+                    <td colspan="8">
+                        <table class="table table-sm mb-0">
+                            <thead>
+                                <tr>
+                                    @foreach (var prop in typeof(StarShipView)
+                                                                    .GetProperties()
+                                                                    .OrderBy(p => p
+                                                                    .GetCustomAttribute<DisplayAttribute>()?.Order ?? int.MaxValue)
+                                                                    .Where(p => p
+                                                                   .GetCustomAttribute<DisplayAttribute>()?.Order > 10))
+                                    {
+                                        var display = prop.GetCustomAttribute<DisplayAttribute>();
+                                        <th>@(display?.Name ?? prop.Name)</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    @foreach (var prop in typeof(StarShipView)
+                                                                    .GetProperties()
+                                                                    .OrderBy(p => p
+                                                                    .GetCustomAttribute<DisplayAttribute>()?.Order ?? int.MaxValue)
+                                                                    .Where(p => p
+                                                                   .GetCustomAttribute<DisplayAttribute>()?.Order > 10))
+                                    {
+                                        var value = prop.GetValue(ship);
+                                        if (value is IList<string> list)
+                                        {
+                                            if(list.Count == 0)
+                                            {
+                                                <td> - </td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            View Items
+                                                        </button>
+                                                        <ul class="dropdown-menu">
+                                                            @foreach (var item in list)
+                                                            {
+                                                                <li>@item</li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                </td>
+                                            }
+                                            
+                                        }
+                                        else
+                                        {
+                                            <td>@value</td>
+                                        }
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public List<StarShipView> StarShips { get; set; }
+
+    // private List<StarShipView> _starShips = new();
+
+    // public override async Task SetParametersAsync(ParameterView parameters)
+    // {
+    //     if(StarShips is not null && StarShips.Count > 0 && _starShips.Count == 0)
+    //     {
+    //         _starShips = StarShips;
+    //         // _starShips.OrderBy()
+    //     }
+    // }
+}

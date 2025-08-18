@@ -25,15 +25,9 @@
 </div>
 
 
-@if(_starShips.Count > 0)
+@if(_starShips is not null && _starShips.Count > 0)
 {
-    <button class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#editModal">Create a StarShip</button>
-    <ul>
-        @foreach(var ship in _starShips)
-        {
-            <li>@ship.Name - @ship.Model</li>
-        }
-    </ul>
+    <Table StarShips="_starShips" />
 }
 else
 {
@@ -43,7 +37,7 @@ else
 }
 
 @code{
-    private List<StarShipView> _starShips = new();
+    private List<StarShipView> _starShips { get; set; } = new();
     private List<string> _filmUrls = new();
     private bool _creatingStarship = false;
 
@@ -52,10 +46,6 @@ else
         @if(_starShips is null || _starShips.Count == 0)
         {
             _starShips = await StarShipService.GetAllAsync();
-        }
-        @if(_filmUrls.Count == 0)
-        {
-            StarShipService.ApiGetFilmUrls();
         }
     }
 
