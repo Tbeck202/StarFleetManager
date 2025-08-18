@@ -107,6 +107,9 @@
     public StarShipView StarShip { get; set; }
 
     [Parameter]
+    public EventCallback<bool> CreatingNewShipCallBack { get; set; }
+
+    [Parameter]
     public EventCallback<StarShipView> SaveShipCallback { get; set; }
 
     private string _selectedFilms = string.Empty;
@@ -114,9 +117,17 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        if(StarShip is null)
+        if(StarShip is null || string.IsNullOrEmpty(StarShip.Name))
         {
-            StarShip = new();
+            if(StarShip is null){
+                StarShip = new(); 
+            }
+
+            await CreatingNewShipCallBack.InvokeAsync(true);
+        }
+        else
+        {
+            await CreatingNewShipCallBack.InvokeAsync(false);
         }
     }
 

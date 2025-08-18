@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using StarFleetManager.Library.Models;
 using StarFleetManager.Library.ViewModels;
+using System.Runtime.CompilerServices;
 
 namespace StarFleetManager.Data.Services
 {
@@ -77,6 +78,16 @@ namespace StarFleetManager.Data.Services
             return ships.Adapt<List<StarShip>>();
         }
 
+        private async Task<StarShip> GetShipByIdAsync(int id)
+        {
+            StarShip? starShip;
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                starShip = await context.StarShips.Where(ship => ship.Id == id).FirstAsync();
+            }
+            return starShip;
+        }
+
         //public async Task<List<StarShipView>> DbGetAllAsync()
         //{
         //    List<StarShip> ships = new List<StarShip>();
@@ -106,6 +117,26 @@ namespace StarFleetManager.Data.Services
             }
 
             return entitiesSaved > 0;
+        }
+
+        public async Task<bool> DbUpdateStarShipAsync(StarShipView starShip)
+        {
+            int entitiesSaved = 0;
+            using(var context = _contextFactory.CreateDbContext())
+            {
+                
+                try
+                {
+                    int updateIndex = StarShips.FindIndex(ship => ship.Id == starShip.Id);
+                    StarShip updateStarShip = StarShips.Where(ship => ship.Id == starShip.Id).First();
+                    updateStarShip = starShip.Adapt<StarShip>();
+                    context.StarShips.Update(updateStarShip);
+                    entitiesSaved = await context.SaveChangesAsync();
+                    StarShips[updateIndex] = entitiesSaved > 0 ? updateStarShip : StarShips[updateIndex];
+                }
+                catch(Exception ex) { } 
+                return entitiesSaved > 0;
+            }
         }
 
         public List<string> ApiGetFilmUrls()

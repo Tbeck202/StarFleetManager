@@ -10,6 +10,10 @@ namespace StarFleetManager.Library.ViewModels
 {
     public class StarShipView : IStarShip
     {
+        public bool DisplayAdditionalDetails { get; set; }
+
+        public int Id { get; set; }
+
         [Required]
         [Display(Name = "Name", Order = 1)]
         public string Name { get; set; }
