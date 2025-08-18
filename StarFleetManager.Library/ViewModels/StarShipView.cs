@@ -12,6 +12,8 @@ namespace StarFleetManager.Library.ViewModels
     {
         public bool DisplayAdditionalDetails { get; set; }
 
+        public bool DisplayDeleteButton { get; set; }
+
         public int Id { get; set; }
 
         [Required]
