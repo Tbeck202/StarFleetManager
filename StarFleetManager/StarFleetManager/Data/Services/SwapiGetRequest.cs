@@ -27,5 +27,7 @@ namespace StarFleetManager.Data.Services
             }
             return response;
         }
+
+        public List<string> GetFilmUrls() { return Swapi.GetFilmUrls(); }
     }
 }
