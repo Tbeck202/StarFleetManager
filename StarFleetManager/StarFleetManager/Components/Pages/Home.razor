@@ -27,7 +27,7 @@
 
 @if(_starShips is not null && _starShips.Count > 0)
 {
-    <Table StarShips="_starShips" EditShipCallBack="SetStarShipForEdit" />
+    <Table StarShips="_starShips" EditShipCallBack="SetStarShipForEdit" DeleteShipCallBack="DeleteStarShip" />
 }
 else
 {
@@ -55,17 +55,6 @@ else
         StateHasChanged();
     }
 
-    // private void ToggleCreateStarShip(bool isCreating)
-    // {
-    //     _creatingStarship = isCreating;
-    // }
-
-    // private void ToggleOffCreateStarShip()
-    // {
-    //     _creatingStarship = false;
-    //     StateHasChanged();
-    // }
-
     public async Task SubmitStarShip(StarShipView ship)
     {
         if(ship.Id == 0)
@@ -77,13 +66,26 @@ else
             await StarShipService.DbUpdateStarShipAsync(ship);
         }
 
-        _starShips.Clear();
-        _starShips = await StarShipService.GetAllAsync();
+        await ResetStarShips();
         StateHasChanged();
     }
 
     public void SetStarShipForEdit(StarShipView ship)
     {
         _starShipEdit.StarShip = ship;
+
+    }
+
+    public async Task DeleteStarShip(StarShipView ship)
+    {
+        await StarShipService.DbDeleteStarShipAsync(ship);
+        await ResetStarShips();
+        StateHasChanged();
+    }
+
+    private async Task ResetStarShips()
+    {
+        _starShips.Clear();
+        _starShips = await StarShipService.GetAllAsync();
     }
 }

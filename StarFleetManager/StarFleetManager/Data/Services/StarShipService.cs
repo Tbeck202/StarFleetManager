@@ -139,6 +139,23 @@ namespace StarFleetManager.Data.Services
             }
         }
 
+        public async Task<bool> DbDeleteStarShipAsync(StarShipView starShip)
+        {
+            int entitiesRemoved = 0;
+            using (var context = _contextFactory.CreateDbContext())
+            {
+                try
+                {
+                    int removeIndex = StarShips.FindIndex(ship => ship.Id == starShip.Id);
+                    context.StarShips.Remove(starShip.Adapt<StarShip>());
+                    entitiesRemoved = await context.SaveChangesAsync();
+                    StarShips.RemoveAt(removeIndex);
+                }
+                catch(Exception ex) { }
+            }
+            return entitiesRemoved > 0;
+        }
+
         public List<string> ApiGetFilmUrls()
         {
             return _swapiGetRequest.GetFilmUrls();
