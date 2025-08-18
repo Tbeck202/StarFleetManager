@@ -11,51 +11,41 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @onclick="ToggleOffCreateStarShip"></button>
+                <h2 class="modal-title fs-5" id="editModalLabel">Starship Editor</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
             </div>
             <div class="modal-body">
-                <EditStarShip SaveShipCallback="@AddStarShip" />
+                <EditStarShip @ref="_starShipEdit" SaveShipCallback="@SubmitStarShip" />
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ToggleOffCreateStarShip">Close</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
             </div>
         </div>
     </div>
 </div>
 
 
-@if(_starShips.Count > 0)
+@if(_starShips is not null && _starShips.Count > 0)
 {
-    <button class="btn btn-secondary"  data-bs-toggle="modal" data-bs-target="#editModal">Create a StarShip</button>
-    <ul>
-        @foreach(var ship in _starShips)
-        {
-            <li>@ship.Name - @ship.Model</li>
-        }
-    </ul>
+    <Table StarShips="_starShips" EditShipCallBack="SetStarShipForEdit" DeleteShipCallBack="DeleteStarShip" />
 }
 else
 {
     <p>Your fleet is empty Admiral! What would you like to do?</p>
     <button class="btn btn-primary" @onclick="FillFleet">Seed Database</button>
-    <button class="btn btn-secondary" @onclick="CreateStarShip">Create a StarShip</button>
+    <button class="btn btn-secondary" >Create a StarShip</button>
 }
 
 @code{
-    private List<StarShipView> _starShips = new();
+    private List<StarShipView> _starShips { get; set; } = new();
     private List<string> _filmUrls = new();
-    private bool _creatingStarship = false;
+    private EditStarShip _starShipEdit = new();
 
     protected override async Task OnInitializedAsync()
     {
         @if(_starShips is null || _starShips.Count == 0)
         {
             _starShips = await StarShipService.GetAllAsync();
-        }
-        @if(_filmUrls.Count == 0)
-        {
-            StarShipService.ApiGetFilmUrls();
         }
     }
 
@@ -65,23 +55,37 @@ else
         StateHasChanged();
     }
 
-    private void CreateStarShip()
+    public async Task SubmitStarShip(StarShipView ship)
     {
-        _creatingStarship = true;
-    }
+        if(ship.Id == 0)
+        {
+            await StarShipService.DbAddStarShipAsync(ship);
+        }
+        else
+        {
+            await StarShipService.DbUpdateStarShipAsync(ship);
+        }
 
-    private void ToggleOffCreateStarShip()
-    {
-        _creatingStarship = false;
+        await ResetStarShips();
         StateHasChanged();
     }
 
-    public async Task AddStarShip(StarShipView ship)
+    public void SetStarShipForEdit(StarShipView ship)
     {
-        bool shipSaved = await StarShipService.DbAddStarShipAsync(ship);
+        _starShipEdit.StarShip = ship;
+
+    }
+
+    public async Task DeleteStarShip(StarShipView ship)
+    {
+        await StarShipService.DbDeleteStarShipAsync(ship);
+        await ResetStarShips();
+        StateHasChanged();
+    }
+
+    private async Task ResetStarShips()
+    {
         _starShips.Clear();
         _starShips = await StarShipService.GetAllAsync();
-        _creatingStarship = !shipSaved;
-        StateHasChanged();
     }
 }
