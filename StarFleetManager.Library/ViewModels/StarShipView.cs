@@ -1,4 +1,5 @@
-﻿using StarFleetManager.Library.Models;
+﻿using Newtonsoft.Json.Linq;
+using StarFleetManager.Library.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -36,38 +37,38 @@ namespace StarFleetManager.Library.ViewModels
         [Display(Name = "Length", Order = 5)]
         public string Length { get; set; }
 
-        public float? LengthFloat => float.TryParse(Length, out var val) ? val : null; 
+        public float? LengthFloat => float.TryParse(CleanString(Length), out var val) ? val : 0; 
 
         [Required]
         [Display(Name = "Max Atmosphering Speed", Order = 6)]
         public string MaxAtmospheringSpeed { get; set; }
 
-        public int? MaxAtmospheringSpeedInt => int.TryParse(MaxAtmospheringSpeed, out var val) ? val : null;
+        public long? MaxAtmospheringSpeedInt => long.TryParse(CleanString(MaxAtmospheringSpeed), out var val) ? val : 0;
 
         [Required]
         [Display(Name = "Cost (in Credits)", Order = 7)]
         public string CostInCredits { get; set; }
 
-        public int? CostInCreditsInt => int.TryParse(CostInCredits, out var val) ? val : null;
+        public long? CostInCreditsInt => long.TryParse(CleanString(CostInCredits), out var val) ? val : 0;
 
         [Required]
         [Display(Name = "Crew", Order = 8)]
         public string Crew { get; set; }
 
-        public int? CrewInt => int.TryParse(Crew, out var val) ? val : null;
+        public int? CrewInt => int.TryParse(CleanString(Crew), out var val) ? val : 0;
 
         [Required]
         [Display(Name = "Passengers", Order = 9)]
         public string Passengers { get; set; }
 
-        public int? PassengersInt => int.TryParse(Passengers, out var val) ? val : null;
+        public int? PassengersInt => int.TryParse(CleanString(Passengers), out var val) ? val : 0;
 
 
         [Required]
         [Display(Name = "Cargo Capacity", Order = 10)]
         public string CargoCapacity { get; set; }
 
-        public int? CargoCapacityInt => int.TryParse(CargoCapacity, out var val) ? val : null;
+        public long? CargoCapacityInt => long.TryParse(CleanString(CargoCapacity), out var val) ? val : 0;
 
         [Required]
         [Display(Name = "Consumables", Order = 11)]
@@ -95,5 +96,11 @@ namespace StarFleetManager.Library.ViewModels
 
         [Display(Name = "Edited", Order = 18)]
         public DateTime Edited { get; set; }  
+
+
+        private string CleanString(string numString)
+        {
+            return numString.Replace(",", "");
+        }
     }
 }

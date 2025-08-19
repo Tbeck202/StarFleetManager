@@ -63,24 +63,18 @@
                     {
                         var headerName = prop.GetCustomAttribute<DisplayAttribute>().Name;
                         var value = prop.GetValue(ship);
-                        
-                            @if(value is IList<string> list)
-                            {
-                                <td>
-                                    <select>
-                                        @foreach(var item in list)
-                                        {
-                                            <option>@item</option>
-                                        }
-                                    </select>
-                                </td>
-                            }
-                            else
-                            {
-                                <td>
-                                    <div class="text-center">@value </div>
-                                </td>
-                            }
+                        string[] numericColumns = new string[]
+                        {
+                            "Max Atmosphering Speed",
+                                "Cost (in Credits)",
+                                "Crew",
+                                "Passengers",
+                                "Cargo Capacity"
+                        };
+
+                        <td>
+                            <div class="text-center">@value </div>
+                        </td>
                        
                         
                     }
@@ -246,34 +240,112 @@
 
     private void TableSort(string columnName)
     {
-        if (_sortColumn == columnName)
+        try
         {
-            _sortDecending = !_sortDecending;
-        }
-        else
-        {
-            _sortColumn = columnName;
-            _sortDecending = true;
-        }
+            if (_sortColumn == columnName)
+            {
+                _sortDecending = !_sortDecending;
+            }
+            else
+            {
+                _sortColumn = columnName;
+                _sortDecending = true;
+            }
 
-        if (_sortDecending)
-        {
-            _sortedShips = StarShips.OrderByDescending(s => GetSortValue(s)).ToList();
+            if (_sortDecending)
+            {
+                _sortedShips = StarShips.OrderByDescending(s => GetSortValue(s)).ToList();
+            }
+            else
+            {
+                _sortedShips = StarShips.OrderBy(s => GetSortValue(s)).ToList();
+            }
         }
-        else
+        catch(Exception ex)
         {
-            _sortedShips = StarShips.OrderBy(s => GetSortValue(s)).ToList();
+            
         }
+        
         StateHasChanged();
     }
+
+    // private int? SetIntDisplay(string columnName, StarShipView ship)
+    // {
+    //     int? number = -1;
+    //     switch (columnName)
+    //     {
+    //         case "Max Atmosphering Speed":
+    //             number = ship.MaxAtmospheringSpeedInt != null ? ship.MaxAtmospheringSpeedInt : -1;
+    //             break;
+    //         case "Cost (in Credits)":
+    //             number = ship.CostInCreditsInt != null ? ship.CostInCreditsInt : -1;
+    //             break;
+    //         case "Crew":
+    //             number = ship.CrewInt != null ? ship.CrewInt : -1;
+    //             break;
+    //         case "Passengers":
+    //             number = ship.PassengersInt != null ? ship.PassengersInt : -1;
+    //             break;
+    //         case "Cargo Capacity":
+    //             number = ship.CargoCapacityInt != null ? ship.CargoCapacityInt : -1;
+    //             break;
+    //         case "":
+    //             number = -1;
+    //             break;
+    //     }
+
+    //     return number;
+    // }
+
+    // private string SetFloatDisplay(float? numFloat, string columnName, StarShipView ship)
+    // {
+    //     //@SetFloatDisplay((float)value, headerName, ship)
+    //     string floatString = "";
+    //     if(numFloat is null)
+    //     {
+    //         switch (columnName)
+    //         {
+    //             case "Length":
+    //                 floatString = StarShips.Where(s => s.Id == ship.Id).First().Length;
+    //                 break;
+    //             case "":
+    //                 floatString = "Parsing Error...";
+    //                 break;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         floatString = numFloat.ToString();
+    //     }
+
+    //     return floatString;
+    // }
 
     private object GetSortValue(StarShipView s) =>
         _sortColumn switch
         {
-            nameof(StarShipView.Name) => s.Name,
-            nameof(StarShipView.Model) => s.Model,
-            nameof(StarShipView.Manufacturer) => s.Manufacturer,
-            nameof(StarShipView.StarshipClass) => s.StarshipClass,
+        // nameof(StarShipView.Name) => s.Name,
+        //     nameof(StarShipView.Model) => s.Model,
+        //     nameof(StarShipView.Manufacturer) => s.Manufacturer,
+        //     nameof(StarShipView.StarshipClass) => s.StarshipClass,
+        //     nameof(StarShipView.MaxAtmospheringSpeed) => s.MaxAtmospheringSpeedInt != null ? s.MaxAtmospheringSpeedInt : s.MaxAtmospheringSpeed,
+        //     nameof(StarShipView.CostInCredits) => s.CostInCreditsInt != null ? s.CostInCreditsInt : s.CostInCredits,
+        //     nameof(StarShipView.Crew) => s.CrewInt != null ? s.CrewInt : s.Crew,
+        //     nameof(StarShipView.Passengers) => s.PassengersInt != null ? s.PassengersInt : s.Passengers,
+        //     nameof(StarShipView.CargoCapacity) => s.CargoCapacityInt != null ? s.CargoCapacityInt : s.CargoCapacity,
+        //     nameof(StarShipView.Length) => s.LengthFloat != null ? s.LengthFloat : s.Length,
+        //     _ => s.Name
+
+            "Name" => s.Name,
+            "Model" => s.Model,
+            "Manufacturer" => s.Manufacturer,
+            "Class" => s.StarshipClass,
+            "Max Atmosphering Speed" => s.MaxAtmospheringSpeedInt != null ? s.MaxAtmospheringSpeedInt : s.MaxAtmospheringSpeed,
+            "Cost (in Credits)" => s.CostInCreditsInt != null ? s.CostInCreditsInt : s.CostInCredits,
+            "Crew" => s.CrewInt != null ? s.CrewInt : s.Crew,
+            "Passengers" => s.PassengersInt != null ? s.PassengersInt : s.Passengers,
+            "Cargo Capacity" => s.CargoCapacityInt != null ? s.CargoCapacityInt : s.CargoCapacity,
+            "Length" => s.LengthFloat != null ? s.LengthFloat : s.Length,
             _ => s.Name
         };
 }
