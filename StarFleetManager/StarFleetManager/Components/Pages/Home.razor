@@ -1,63 +1,84 @@
 ﻿@rendermode @(new InteractiveServerRenderMode(prerender: false))
 @page "/"
 @inject IStarShipService StarShipService
+@inject AuthenticationStateProvider AuthStateProvider
 
 <PageTitle>Home</PageTitle>
 
-<h1>Starships</h1>
-
+<h1 class="sw-yellow">Starships</h1>
 
 <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h2 class="modal-title fs-5" id="editModalLabel">Starship Editor</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" >X</button>
             </div>
             <div class="modal-body">
                 <EditStarShip @ref="_starShipEdit" SaveShipCallback="@SubmitStarShip" />
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >Close</button>
+                <button type="button" class="btn btn-info" data-bs-dismiss="modal" >Close</button>
             </div>
         </div>
     </div>
 </div>
 
 
-@if(_starShips is not null && _starShips.Count > 0)
+@if(_initialized && _starShips is not null && _starShips.Count > 0)
 {
     <Table StarShips="_starShips" EditShipCallBack="SetStarShipForEdit" DeleteShipCallBack="DeleteStarShip" />
 }
 else
 {
-    <p>Your fleet is empty Admiral! What would you like to do?</p>
-    <button class="btn btn-primary" @onclick="FillFleet">Seed Database</button>
-    <button class="btn btn-secondary" >Create a StarShip</button>
+    if (_initialized)
+    {
+        <p>Your fleet is empty Admiral!</p>
+        @if (_isLoggedIn)
+        {
+            <button class="btn btn-success" @onclick="FillFleet">Build the fleet!</button>
+            
+        }
+        else
+        {
+            <p>Log in and let's build the fleet!</p>
+        }
+    }
+    else
+    {
+        <p>Loading...</p>
+    }
 }
 
 @code{
     private List<StarShipView> _starShips { get; set; } = new();
     private List<string> _filmUrls = new();
     private EditStarShip _starShipEdit = new();
+    private bool _initialized = false;
+    private bool _isLoggedIn;
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        _isLoggedIn = authState.User.Identity?.IsAuthenticated ?? false;
         @if(_starShips is null || _starShips.Count == 0)
         {
+            
             _starShips = await StarShipService.GetAllAsync();
+            if (!_initialized) _initialized = true;
         }
     }
 
     private async Task FillFleet()
     {
         bool dbSeeded = await StarShipService.SeedDataBaseAsync();
+        await ResetStarShips();
         StateHasChanged();
     }
 
     public async Task SubmitStarShip(StarShipView ship)
     {
-        if(ship.Id == 0)
+       if(ship.Id == 0)
         {
             await StarShipService.DbAddStarShipAsync(ship);
         }

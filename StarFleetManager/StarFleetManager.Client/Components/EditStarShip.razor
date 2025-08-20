@@ -1,5 +1,5 @@
 ﻿
-<EditForm Model="@StarShip" OnValidSubmit="SaveStarShip" >
+<EditForm Model="@StarShip" OnValidSubmit="SaveStarShip">
     <p>Star Ship Info:</p>
     <DataAnnotationsValidator />
     <ValidationSummary class="text-danger" role="alert" />
@@ -96,7 +96,7 @@
         <ValidationMessage For="() => StarShip.Films" class="text-danger" />
     </div>
     
-    <button class="btn btn-success" type="submit">Save Starship</button>
+    <button class="btn btn-success" type="submit" data-bs-dismiss="modal">Save Starship</button>
 </EditForm>
 
 
