@@ -1,0 +1,168 @@
+﻿
+<EditForm Model="@StarShip" OnValidSubmit="SaveStarShip">
+    <p>Star Ship Info:</p>
+    <DataAnnotationsValidator />
+    <ValidationSummary class="text-danger" role="alert" />
+    <div class="form-floating mb-3">
+        <InputText aria-label="name" @bind-Value="StarShip.Name" class="form-control" />
+        <label for="name">Name</label>
+        <ValidationMessage For="() => StarShip.Name" class="text-danger" />
+    </div>
+    <div class="form-floating mb-3">
+        <InputText aria-label="model" @bind-Value="StarShip.Model" class="form-control" />
+        <label for="model">Model</label>
+        <ValidationMessage For="() => StarShip.Model" class="text-danger" />
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="manufacturer" @bind-Value="StarShip.Manufacturer" class="form-control" />
+        <label for="manufacturer">Manufacturer</label>
+        <ValidationMessage For="() => StarShip.Manufacturer" class="text-danger" />
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="costInCredits" @bind-Value="StarShip.CostInCredits" class="form-control" />
+        <label for="costInCredits">Cost (In Credits)</label>
+        <ValidationMessage For="() => StarShip.CostInCredits" class="text-danger" />
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="length" @bind-Value="StarShip.Length" class="form-control" />
+        <label for="length">Length</label>
+        <ValidationMessage For="() => StarShip.Length" class="text-danger" />
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="maxAtmospheringSpeed" @bind-Value="StarShip.MaxAtmospheringSpeed" class="form-control" />
+        <label for="maxAtmospheringSpeed">Maximum Atmosphering Speed</label>
+        <ValidationMessage For="() => StarShip.MaxAtmospheringSpeed" class="text-danger" />
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="crew" @bind-Value="StarShip.Crew" class="form-control" />
+        <label for="crew">Crew</label>
+        <ValidationMessage For="() => StarShip.Crew" class="text-danger" />
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="passengers" @bind-Value="StarShip.Passengers" class="form-control" />
+        <label for="passengers">Passengers</label>
+        <ValidationMessage For="() => StarShip.Passengers" class="text-danger" />
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="cargoCapacity" @bind-Value="StarShip.CargoCapacity" class="form-control" />
+        <label for="cargoCapacity">Cargo Capacity</label>
+        <ValidationMessage For="() => StarShip.CargoCapacity" class="text-danger" />
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="consumables" @bind-Value="StarShip.Consumables" class="form-control" />
+        <label for="consumables">Consumables</label>
+        <ValidationMessage For="() => StarShip.Consumables" class="text-danger" />
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="hyperdriveRating" @bind-Value="StarShip.HyperdriveRating" class="form-control" />
+        <label for="hyperdriveRating">Hyperdrive Rating</label>
+        <ValidationMessage For="() => StarShip.HyperdriveRating" class="text-danger" />
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="mglt" @bind-Value="StarShip.MGLT" class="form-control" />
+        <label for="mglt">MGLT</label>
+        <ValidationMessage For="() => StarShip.MGLT" class="text-danger" />
+    </div>
+    
+    <div class="form-floating mb-3">
+        <InputText aria-label="starshipClass" @bind-Value="StarShip.StarshipClass" class="form-control" />
+        <label for="starshipClass">Class</label>
+        <ValidationMessage For="() => StarShip.StarshipClass" class="text-danger" />
+    </div>
+
+    <hr />
+
+    <p>Enter the pilot & film urls separated by commas</p>
+    
+    <div class="form-floating mb-3">
+        <InputTextArea aria-label="pilots" @bind-Value="_selectedPilots" class="form-control" />
+        <label for="pilots">Pilots</label>
+        <ValidationMessage For="() => StarShip.Pilots" class="text-danger" />
+    </div>
+
+    <div class="form-floating mb-3">
+        <InputTextArea aria-label="films" @bind-Value="_selectedFilms" class="form-control" />
+        <label for="films">Films</label>
+        <ValidationMessage For="() => StarShip.Films" class="text-danger" />
+    </div>
+    
+    <button class="btn btn-success" type="submit" data-bs-dismiss="modal">Save Starship</button>
+</EditForm>
+
+
+
+@code {
+
+    [Parameter]
+    public StarShipView StarShip { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> CreatingNewShipCallBack { get; set; }
+
+    [Parameter]
+    public EventCallback<StarShipView> SaveShipCallback { get; set; }
+
+    private string _selectedFilms = string.Empty;
+    private string _selectedPilots = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(StarShip is null || string.IsNullOrEmpty(StarShip.Name))
+        {
+            if(StarShip is null){
+                StarShip = new(); 
+            }
+
+            await CreatingNewShipCallBack.InvokeAsync(true);
+        }
+        else
+        {
+            await CreatingNewShipCallBack.InvokeAsync(false);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    private async Task SaveStarShip()
+    {
+        StarShip.Films = ParseTextAreaEntry(_selectedFilms);
+        StarShip.Pilots = ParseTextAreaEntry(_selectedPilots);
+        StarShip.Created = StarShip.Created < DateTime.Now ? StarShip.Created : DateTime.Now;
+        StarShip.Edited = DateTime.Now;
+        StarShip.Url = "https://swapi.info/api/starships";
+        await SaveShipCallback.InvokeAsync(StarShip);
+        StarShip = new();
+        StateHasChanged();
+    }
+
+    private List<string> ParseTextAreaEntry(string entry)
+    {
+        List<string> items = new();
+        if (!string.IsNullOrEmpty(_selectedFilms))
+        {
+            try
+            {
+                items = _selectedFilms.Split(',').ToList();
+                foreach (string item in items)
+                {
+                    item.Trim();
+                }
+            }
+            catch(Exception ex){}
+        }
+        return items;
+    }
+}

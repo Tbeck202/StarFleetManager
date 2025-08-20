@@ -1,0 +1,4 @@
+﻿.table.no-header-border thead th {
+    border-top: none !important;
+    border-bottom: none !important;
+}

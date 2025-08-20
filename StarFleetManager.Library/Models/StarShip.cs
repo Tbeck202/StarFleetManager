@@ -7,60 +7,62 @@ using System.Threading.Tasks;
 
 namespace StarFleetManager.Library.Models
 {
-    public class StarShip
+    public class StarShip : IStarShip
     {
+        public int Id { get; set; }
+
         [JsonProperty("name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [JsonProperty("model")]
-        public string Model { get; set; }
+        public string Model { get; set; } = string.Empty;
 
         [JsonProperty("manufacturer")]
-        public string Manufacturer { get; set; }
+        public string Manufacturer { get; set; } = string.Empty;
 
         [JsonProperty("cost_in_credits")]
-        public string CostInCredits { get; set; }
+        public string CostInCredits { get; set; } = string.Empty;
 
         [JsonProperty("length")]
-        public string Length { get; set; }
+        public string Length { get; set; } = string.Empty;
 
         [JsonProperty("max_atmosphering_speed")]
-        public string MaxAtmospheringSpeed { get; set; }
+        public string MaxAtmospheringSpeed { get; set; } = string.Empty;
 
         [JsonProperty("crew")]
-        public string Crew { get; set; }
+        public string Crew { get; set; } = string.Empty;
 
         [JsonProperty("passengers")]
-        public string Passengers { get; set; }
+        public string Passengers { get; set; } = string.Empty;
 
         [JsonProperty("cargo_capacity")]
-        public string CargoCapacity { get; set; }
+        public string CargoCapacity { get; set; } = string.Empty;
 
         [JsonProperty("consumables")]
-        public string Consumables { get; set; }
+        public string Consumables { get; set; } = string.Empty;
 
         [JsonProperty("hyperdrive_rating")]
-        public string HyperdriveRating { get; set; }
+        public string HyperdriveRating { get; set; } = string.Empty;
 
         [JsonProperty("MGLT")]
-        public string MGLT { get; set; }
+        public string MGLT { get; set; } = string.Empty;
 
         [JsonProperty("starship_class")]
-        public string StarshipClass { get; set; }
+        public string StarshipClass { get; set; } = string.Empty;
 
         [JsonProperty("pilots")]
-        public List<string> Pilots { get; set; }
+        public List<string> Pilots { get; set; } = new();
 
         [JsonProperty("films")]
-        public List<string> Films { get; set; }
+        public List<string> Films { get; set; } = new();
 
         [JsonProperty("created")]
-        public DateTime Created { get; set; }
+        public DateTime Created { get; set; } 
 
         [JsonProperty("edited")]
         public DateTime Edited { get; set; }
 
         [JsonProperty("url")]
-        public string Url { get; set; }
+        public string Url { get; set; } = string.Empty;
     }
 }
