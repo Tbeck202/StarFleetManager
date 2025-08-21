@@ -34,12 +34,16 @@ Update the connection string in appsettings.json (or appsettings.Development.jso
 
 Replace (localdb)\\MSSQLLocalDB with your SQL Server instance if different.
 
-Change the database name if desired.
+Change the database name to something less generic.
 
 Apply Database Migrations
 Run the following to create and seed the database:
 
 `dotnet ef database update`
+
+Or, if you prefer Package Manager Console you can run
+
+`Update-Database`
 
 
 If you don’t have the EF Core tools installed:
@@ -68,10 +72,13 @@ Migrations are stored in the Migrations folder.
 To add a new migration:
 
 `dotnet ef migrations add MigrationName`
+
 `dotnet ef database update`
 
 Or with Package Manager Console:
+
 `Add-Migration MigrationName`
+
 `Update-Database`
 
 ## Project Notes
@@ -80,7 +87,6 @@ Styling: Bootstrap 5 is included and has been customized by yours truly. If you 
 
 Authorization: Protect pages/components using the <AuthorizeView> component or [Authorize] attribute on pages.
 - Example: A user must be logged in to seed the db or to add/edit/delete any StarShips.
-
 
 ## Troubleshooting
 
