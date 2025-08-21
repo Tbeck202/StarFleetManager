@@ -34,23 +34,26 @@
 }
 else
 {
-    if (_initialized)
-    {
-        <p>Your fleet is empty Admiral!</p>
-        @if (_isLoggedIn)
+    <div class="container">
+        @if (_initialized)
         {
-            <button class="btn btn-success" @onclick="FillFleet">Build the fleet!</button>
-            
+            <p>Your fleet is empty Admiral!</p>
+            @if (_isLoggedIn)
+            {
+                <p>How should we proceed?</p>
+                <button class="btn btn-success" @onclick="FillFleet">Build the fleet!</button>
+                <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editModal">Create a StarShip!</button>
+            }
+            else
+            {
+                <p>Log in and let's build the fleet!</p>
+            }
         }
         else
         {
-            <p>Log in and let's build the fleet!</p>
+            <p>Loading...</p>
         }
-    }
-    else
-    {
-        <p>Loading...</p>
-    }
+    </div>
 }
 
 @code{

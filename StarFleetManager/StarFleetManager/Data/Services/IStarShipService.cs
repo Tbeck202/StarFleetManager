@@ -9,7 +9,7 @@ namespace StarFleetManager.Data.Services
 
         Task<bool> SeedDataBaseAsync();
 
-        Task<bool> RefillDataBaseAsync();
+        Task<int> RefillDataBaseAsync();
 
         Task<List<StarShip>> ApiGetAllAsync();
 

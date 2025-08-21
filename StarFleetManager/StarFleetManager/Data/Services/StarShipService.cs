@@ -52,12 +52,45 @@ namespace StarFleetManager.Data.Services
             return entitiesSaved > 0;
         }
 
-        public async Task<bool> RefillDataBaseAsync()
+        public async Task<int> RefillDataBaseAsync()
         {
-            List<StarShip> shipsFromSwapi = await DbGetAllAsync();
-            shipsFromSwapi = shipsFromSwapi.Where(s => !_starShips.Contains(s)).ToList();
-            _starShips = shipsFromSwapi;
-            return shipsFromSwapi.Any();
+            List<StarShip> shipsFromSwapi = await ApiGetAllAsync();
+            List<StarShip> shipsToAdd = new();
+            int itemsToAdd = 0;
+
+            try
+            {
+                foreach (StarShip sh in shipsFromSwapi)
+                {
+                    bool exists = _starShips.Any(s => s.Url.Equals(sh.Url, StringComparison.OrdinalIgnoreCase));
+                    if (!exists)
+                    {
+                        shipsToAdd.Add(sh);
+                        itemsToAdd++;
+                    }
+                }
+            }
+            catch (Exception ex) { }
+
+            int itemsSaved = 0;
+            if (itemsToAdd > 0) 
+            {
+                itemsSaved = await DbAddStarShipsAsync(shipsToAdd);
+            }
+
+            try
+            {
+                if (itemsSaved > 0)
+                {
+                    foreach (StarShip sh in shipsToAdd)
+                    {
+                        _starShips.Add(sh);
+                    }
+                }
+            }
+            catch { }
+            
+            return itemsSaved;
         }
 
         public async Task<List<StarShip>> ApiGetAllAsync()
@@ -113,6 +146,22 @@ namespace StarFleetManager.Data.Services
             }
 
             return entitiesSaved > 0;
+        }
+
+        private async Task<int> DbAddStarShipsAsync(List<StarShip> ships)
+        {
+            int entitiesSaved = 0;
+            try
+            {
+                using (var context = _contextFactory.CreateDbContext())
+                {
+                    await context.StarShips.AddRangeAsync(ships);
+                    entitiesSaved = await context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex) { }
+            
+            return entitiesSaved;
         }
 
         public async Task<bool> DbUpdateStarShipAsync(StarShipView starShip)
