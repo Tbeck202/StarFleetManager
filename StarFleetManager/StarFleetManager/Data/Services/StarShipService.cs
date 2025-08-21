@@ -48,7 +48,7 @@ namespace StarFleetManager.Data.Services
 
                 StarShips = ships;
             }
-            //NEED TO RUN UPDATE DATABASE
+            
             return entitiesSaved > 0;
         }
 
@@ -87,18 +87,6 @@ namespace StarFleetManager.Data.Services
             }
             return starShip;
         }
-
-        //public async Task<List<StarShipView>> DbGetAllAsync()
-        //{
-        //    List<StarShip> ships = new List<StarShip>();
-
-        //    using(var context = _contextFactory.CreateDbContext())
-        //    {
-        //        ships = await context.StarShips.ToListAsync();
-        //    }
-
-        //    return ships.Adapt<List<StarShipView>>();
-        //}
 
         public async Task<bool> DbAddStarShipAsync(StarShipView starShip)
         {
