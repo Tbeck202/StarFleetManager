@@ -59,22 +59,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        try
+        var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+        _isLoggedIn = authState.User.Identity?.IsAuthenticated ?? false;
+        @if (_starShips is null || _starShips.Count == 0)
         {
-            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
-            _isLoggedIn = authState.User.Identity?.IsAuthenticated ?? false;
-            @if (_starShips is null || _starShips.Count == 0)
-            {
 
-                _starShips = await StarShipService.GetAllAsync();
-                if (!_initialized) _initialized = true;
-            }
+            _starShips = await StarShipService.GetAllAsync();
+            if (!_initialized) _initialized = true;
         }
-        catch(Exception ex)
-        {
-            
-        }
-        
     }
 
     private async Task FillFleet()
