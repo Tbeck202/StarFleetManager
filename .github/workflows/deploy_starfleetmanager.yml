@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - StarFleetManager
+name: Build and deploy ASP.Net Core app to Azure Web App - starfleetmanager
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     permissions:
       contents: read #This is required for actions/checkout
 
@@ -27,7 +27,7 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
@@ -36,7 +36,7 @@ jobs:
           path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build
     permissions:
       id-token: write #This is required for requesting the JWT
@@ -51,15 +51,15 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_AF37A9ACBF4244D690CABE35DFCD855D }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_058E9F5260B44DB8AE9041D2E74AEC3D }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D55B7CDF4BEB4400A8BA36776B4D434B }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_6EF1B87023724F168DBB05E47B3CB72A }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_64A4B46CB91A47F8B4D9B7257D4858B3 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_8DBE35E2B8DD41C78EBA211D175B21E5 }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'StarFleetManager'
+          app-name: 'starfleetmanager'
           slot-name: 'Production'
           package: .
           
