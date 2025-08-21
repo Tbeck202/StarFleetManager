@@ -5,16 +5,18 @@
     
     <main>
         <NavMenu />
-        @*<div class="top-row px-4">
-           
-             <div class="container d-flex justify-content-end">
-                <a class="navbar-brand" href="/">StarFleetManager</a>
-                <a href="Account/Login">Login</a>
-            </div> 
-        </div>*@
 
         <article class="content px-4">
-            @Body
+            <ErrorBoundary>
+                <ChildContent>
+                    @Body
+                </ChildContent>
+                <ErrorContent>
+                    <p>An error occured</p>
+                    <p>@context.Message</p>
+                </ErrorContent>
+            </ErrorBoundary>
+            
         </article>
     </main>
 </div>
