@@ -5,7 +5,10 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1 class="sw-yellow">Starships</h1>
+<div class="container">
+    <h1 class="sw-yellow">Starships</h1>
+</div>
+
 
 <div class="modal fade" id="editModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -27,7 +30,7 @@
 
 @if(_initialized && _starShips is not null && _starShips.Count > 0)
 {
-    <Table StarShips="_starShips" EditShipCallBack="SetStarShipForEdit" DeleteShipCallBack="DeleteStarShip" />
+    <Table StarShips="_starShips" EditShipCallBack="SetStarShipForEdit" DeleteShipCallBack="DeleteStarShip" RefillDataBaseCallback="RefillFleet" />
 }
 else
 {
@@ -73,12 +76,11 @@ else
     {
         bool dbSeeded = await StarShipService.SeedDataBaseAsync();
         await ResetStarShips();
-        StateHasChanged();
     }
 
     public async Task SubmitStarShip(StarShipView ship)
     {
-       if(ship.Id == 0)
+        if(ship.Id == 0)
         {
             await StarShipService.DbAddStarShipAsync(ship);
         }
@@ -88,25 +90,27 @@ else
         }
 
         await ResetStarShips();
-        StateHasChanged();
+        
     }
 
-    public void SetStarShipForEdit(StarShipView ship)
-    {
-        _starShipEdit.StarShip = ship;
-
-    }
+    public void SetStarShipForEdit(StarShipView ship) => _starShipEdit.StarShip = ship;
 
     public async Task DeleteStarShip(StarShipView ship)
     {
         await StarShipService.DbDeleteStarShipAsync(ship);
         await ResetStarShips();
-        StateHasChanged();
+    }
+
+    public async Task RefillFleet()
+    {
+        await StarShipService.RefillDataBaseAsync();
+        await ResetStarShips();
     }
 
     private async Task ResetStarShips()
     {
         _starShips.Clear();
         _starShips = await StarShipService.GetAllAsync();
+        StateHasChanged();
     }
 }

@@ -52,6 +52,14 @@ namespace StarFleetManager.Data.Services
             return entitiesSaved > 0;
         }
 
+        public async Task<bool> RefillDataBaseAsync()
+        {
+            List<StarShip> shipsFromSwapi = await DbGetAllAsync();
+            shipsFromSwapi = shipsFromSwapi.Where(s => !_starShips.Contains(s)).ToList();
+            _starShips = shipsFromSwapi;
+            return shipsFromSwapi.Any();
+        }
+
         public async Task<List<StarShip>> ApiGetAllAsync()
         {
             List<StarShip> starships = new List<StarShip>();
