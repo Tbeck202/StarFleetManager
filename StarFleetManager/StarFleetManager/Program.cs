@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using StarFleetManager.Client.Pages;
 using StarFleetManager.Components;
 using StarFleetManager.Components.Account;
 using StarFleetManager.Data;
