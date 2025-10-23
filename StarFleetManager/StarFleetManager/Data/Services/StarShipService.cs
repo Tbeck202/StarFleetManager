@@ -11,13 +11,6 @@ namespace StarFleetManager.Data.Services
     {
         private readonly ISwapiGetRequest _swapiGetRequest;
         private readonly IDbContextFactory<ApplicationDbContext> _contextFactory;
-        private List<StarShip> _starShips = new();
-
-        public List<StarShip> StarShips 
-        { 
-            get => _starShips; 
-            private set => _starShips = value; 
-        }
 
         public StarShipService(IDbContextFactory<ApplicationDbContext> contextFactory, ISwapiGetRequest swapiGetRequest)
         {
@@ -27,11 +20,8 @@ namespace StarFleetManager.Data.Services
 
         public async Task<List<StarShipView>> GetAllAsync()
         {
-            if(StarShips.Count == 0)
-            {
-                StarShips = await DbGetAllAsync();
-            }
-            return StarShips.Adapt<List<StarShipView>>();
+            List<StarShip> ships = await DbGetAllAsync();
+            return ships.Adapt<List<StarShipView>>();
         }
 
         public async Task<bool> SeedDataBaseAsync()
@@ -45,8 +35,6 @@ namespace StarFleetManager.Data.Services
                     await context.StarShips.AddRangeAsync(ships);
                     entitiesSaved = await context.SaveChangesAsync();
                 }
-
-                StarShips = ships;
             }
             
             return entitiesSaved > 0;
@@ -60,9 +48,10 @@ namespace StarFleetManager.Data.Services
 
             try
             {
+                List<StarShip> ships = await DbGetAllAsync();
                 foreach (StarShip sh in shipsFromSwapi)
                 {
-                    bool exists = _starShips.Any(s => s.Url.Equals(sh.Url, StringComparison.OrdinalIgnoreCase));
+                    bool exists = ships.Any(s => s.Url.Equals(sh.Url, StringComparison.OrdinalIgnoreCase));
                     if (!exists)
                     {
                         shipsToAdd.Add(sh);
@@ -77,18 +66,6 @@ namespace StarFleetManager.Data.Services
             {
                 itemsSaved = await DbAddStarShipsAsync(shipsToAdd);
             }
-
-            try
-            {
-                if (itemsSaved > 0)
-                {
-                    foreach (StarShip sh in shipsToAdd)
-                    {
-                        _starShips.Add(sh);
-                    }
-                }
-            }
-            catch { }
             
             return itemsSaved;
         }
@@ -116,10 +93,11 @@ namespace StarFleetManager.Data.Services
                 ships = await context.StarShips.ToListAsync();
             }
 
-            return ships.Adapt<List<StarShip>>();
+            return ships;
         }
 
-        private async Task<StarShip> GetShipByIdAsync(int id)
+        // Consider building response model that would hold the startship(s) and a response message in case no ship exists
+        private async Task<StarShip> DbGetShipByIdAsync(int id)
         {
             StarShip? starShip;
             using (var context = _contextFactory.CreateDbContext())
@@ -139,7 +117,6 @@ namespace StarFleetManager.Data.Services
                 {
                     await context.StarShips.AddAsync(newStarShip);
                     entitiesSaved = await context.SaveChangesAsync();
-                    if (entitiesSaved > 0) StarShips.Add(newStarShip);
                 }
                 catch (Exception ex) { }
                 
@@ -172,12 +149,9 @@ namespace StarFleetManager.Data.Services
                 
                 try
                 {
-                    int updateIndex = StarShips.FindIndex(ship => ship.Id == starShip.Id);
-                    StarShip updateStarShip = StarShips.Where(ship => ship.Id == starShip.Id).First();
-                    updateStarShip = starShip.Adapt<StarShip>();
+                    StarShip updateStarShip = await DbGetShipByIdAsync(starShip.Id); 
                     context.StarShips.Update(updateStarShip);
                     entitiesSaved = await context.SaveChangesAsync();
-                    StarShips[updateIndex] = entitiesSaved > 0 ? updateStarShip : StarShips[updateIndex];
                 }
                 catch(Exception ex) { } 
                 return entitiesSaved > 0;
@@ -191,10 +165,8 @@ namespace StarFleetManager.Data.Services
             {
                 try
                 {
-                    int removeIndex = StarShips.FindIndex(ship => ship.Id == starShip.Id);
                     context.StarShips.Remove(starShip.Adapt<StarShip>());
                     entitiesRemoved = await context.SaveChangesAsync();
-                    StarShips.RemoveAt(removeIndex);
                 }
                 catch(Exception ex) { }
             }
